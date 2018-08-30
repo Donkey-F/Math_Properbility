@@ -11,7 +11,7 @@ My personal e-mail: 16zfdeng5@stu.edu.cn
   
 Enjoy yourself in the mathematical world!
 
-Updated order:  
+Updated log:  
 1. Central_limit_theorem  
 Ps. (1)Download the folder and unpack it, check the CLT.html firstly.  
     (2)Ignore the folder"CLT", it will be deleted soon(there is something wrong with its content,  
