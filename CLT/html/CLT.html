@@ -1,0 +1,202 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Simulating CLT</title><meta name="generator" content="MATLAB 9.2"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2018-08-30"><meta name="DC.source" content="CLT.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Simulating CLT</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">---------------------------------------------------------------</a></li><li><a href="#2">This script is aimed at simulatiing the central-limit theorem</a></li><li><a href="#3">I will try my best to explain the process step by step</a></li><li><a href="#4">If you have any great idea or question, please contact me</a></li><li><a href="#5">as soon as possible!</a></li><li><a href="#6">E-mail: <a href="mailto:16zfdeng5@stu.edu.cn">16zfdeng5@stu.edu.cn</a></a></li><li><a href="#7">---------------------------------------------------------------</a></li><li><a href="#8">Remove all the variables created before</a></li><li><a href="#9">n -&gt; &#8721;Xi, the number of i;</a></li><li><a href="#10">sample_size -&gt; Note that in CLT, we treat &#8721;Xi/n as a unit(a single variable), which is</a></li><li><a href="#11">the average of those i.i.d Xi. Here sample_size is the experiment times</a></li><li><a href="#12">we want to simulate about &#8721;Xi/n. Just like the n of Bernoulli's random</a></li><li><a href="#13">variable~(n, p).</a></li><li><a href="#14">nbins -&gt; For histogramming. We will see later.</a></li><li><a href="#15">Here, we use a clever way to simulate our variable &#8721;Xi/n for 10,000</a></li><li><a href="#16">times: we use the matlib function unifrnd() to get 300 * 10,000 independent</a></li><li><a href="#17">identically distributed variables(exactly, each of them is a specified</a></li><li><a href="#18">real number). We can treat each sum of each column(containing 300 numbers) as a</a></li><li><a href="#19">single experiment on the random variable, namely &#8721;Xi(not &#8721;Xi/n).</a></li><li><a href="#20">Note: Here. each Xi is a uniformly distributed random variable on [-0.5, 0.5]</a></li><li><a href="#21">Here we sum each column using sum(R, 1). We can get a 1 * 10,000 vector,</a></li><li><a href="#22">each of which is the sum result of each column, namely &#8721;Xi.</a></li><li><a href="#23">After summing, we standardize the random variable as following:</a></li><li><a href="#24">(&#8721;Xi / n - &#956;) / (sqrt(n) * &#963;)</a></li><li><a href="#25">Tips: E[&#8721;Xi / n] == &#956;, Var(&#8721;Xi / n) == &#963;^2 / n</a></li><li><a href="#26">And it is very clear that the expectation of uniformly distributed random</a></li><li><a href="#27">variable on [-0.5, 0.5] is 0; the varience of it is (1 / 12), and the n</a></li><li><a href="#28">here is 300. Note that (sqrt(n) * &#963;) == 5</a></li><li><a href="#29">Calculate the interval while ploting the histogram</a></li><li><a href="#30">You can use the command "doc hist" in matlib command line window to get</a></li><li><a href="#31">more information about hist()</a></li><li><a href="#32">This is a very important step!!!</a></li><li><a href="#33">In gereral, we are transforming Y from frequency form to probability</a></li><li><a href="#34">density form here, namely, P{&#8721;Xi / n &#8712; a paticular section}</a></li><li><a href="#37">Why? Why don't we just calculate P{&#8721;Xi / n = i}?</a></li><li><a href="#38">This simple stupid question brothered me for a few hours... :(</a></li><li><a href="#39">Here is the reason ---</a></li><li><a href="#41">1. &#8721;Xi / n is a "continuous random varible", technically speaking.</a></li><li><a href="#42">P{&#8721;Xi / n = any paticular real number} == 0. (Properties of integration)</a></li><li><a href="#43">2. For the reason "..." mentioned above, the only thing we can do if we</a></li><li><a href="#44">want to measure the mass function of &#8721;Xi / n, is to define the dx so</a></li><li><a href="#45">that f(x)dx makes sense.</a></li><li><a href="#48">And the key to obtain the equation below(or, to calculate</a></li><li><a href="#49">P{&#8721;Xi / n &#8712; a paticular section(or interval)}) is that we can calculate</a></li><li><a href="#50">the area of each bar and compare each of them to the total area ---</a></li><li><a href="#52">the area of a paticular bar: Y(i) * interval;</a></li><li><a href="#53">the area of all of the bars: &#8721;Y(i) * interval == sample_size * (max(Average) - min(Average))</a></li><li><a href="#55">Thus, P{&#8721;Xi / n &#8712; a paticular section} ==</a></li><li><a href="#56">Y(i) * interval / (sample_size *  interval == Y(i) / sample_size</a></li><li><a href="#59">It that enough? But wait... The equation is Y / (sample_size * interval)</a></li><li><a href="#60">Why do we need the divisor "interval"?</a></li><li><a href="#61">This simple question again brother me for almost half of the day :(</a></li><li><a href="#62">Just consider the meaning of the probability density function:</a></li><li><a href="#63">By integral, &#8747;f(x)dx == 1, for all probability density function.</a></li><li><a href="#64">Which means that the area that the curve covers between itself and the</a></li><li><a href="#65">x-axis(I am just talking about the one dimension situation) is always</a></li><li><a href="#66">equal to 1. Note that if we just make Y(i) equal to Y(i) / sample_size,</a></li><li><a href="#67">we are just insuring the sum of the height of each bar equal to 1, not</a></li><li><a href="#68">the sum of the area of each bar equals to 1, (You can try to plot the histogram</a></li><li><a href="#69">without the divisor "interval")which does not accord with the definition</a></li><li><a href="#70">of probability density function. So here, note that the total area of all</a></li><li><a href="#71">the bars equal to interval * &#8721;Y(i), while Y(i) is fixed. We have to make</a></li><li><a href="#72">sure that (interval * ?) == 1. By doing ? = Y(i) / sample_size * (1 / interval)</a></li><li><a href="#73">should be enough. &#8721;? == 1 / interval, thus, interval * ? == 1.</a></li><li><a href="#74">Plotting the histogram and compare it with the Gaussian distribution</a></li><li><a href="#75">Something more to say</a></li><li><a href="#76">The histogram may not perfectly fix the Gaussian distribution,</a></li><li><a href="#77">but the key is to compare the area they cover in each small interval.</a></li><li><a href="#78">Area is the key, not the height of these curve or bar.</a></li></ul></div><h2 id="1">---------------------------------------------------------------</h2><h2 id="2">This script is aimed at simulatiing the central-limit theorem</h2><h2 id="3">I will try my best to explain the process step by step</h2><h2 id="4">If you have any great idea or question, please contact me</h2><h2 id="5">as soon as possible!</h2><h2 id="6">E-mail: <a href="mailto:16zfdeng5@stu.edu.cn">16zfdeng5@stu.edu.cn</a></h2><h2 id="7">---------------------------------------------------------------</h2><h2 id="8">Remove all the variables created before</h2><pre class="codeinput">clear <span class="string">all</span>;
+</pre><h2 id="9">n -&gt; &#8721;Xi, the number of i;</h2><h2 id="10">sample_size -&gt; Note that in CLT, we treat &#8721;Xi/n as a unit(a single variable), which is</h2><h2 id="11">the average of those i.i.d Xi. Here sample_size is the experiment times</h2><h2 id="12">we want to simulate about &#8721;Xi/n. Just like the n of Bernoulli's random</h2><h2 id="13">variable~(n, p).</h2><h2 id="14">nbins -&gt; For histogramming. We will see later.</h2><pre class="codeinput">n = 5000; sample_size = 20000; nbins = 500;
+</pre><h2 id="15">Here, we use a clever way to simulate our variable &#8721;Xi/n for 10,000</h2><h2 id="16">times: we use the matlib function unifrnd() to get 300 * 10,000 independent</h2><h2 id="17">identically distributed variables(exactly, each of them is a specified</h2><h2 id="18">real number). We can treat each sum of each column(containing 300 numbers) as a</h2><h2 id="19">single experiment on the random variable, namely &#8721;Xi(not &#8721;Xi/n).</h2><h2 id="20">Note: Here. each Xi is a uniformly distributed random variable on [-0.5, 0.5]</h2><pre class="codeinput">R=unifrnd(-0.5,0.5,[n, sample_size]);
+</pre><h2 id="21">Here we sum each column using sum(R, 1). We can get a 1 * 10,000 vector,</h2><h2 id="22">each of which is the sum result of each column, namely &#8721;Xi.</h2><h2 id="23">After summing, we standardize the random variable as following:</h2><h2 id="24">(&#8721;Xi / n - &#956;) / (sqrt(n) * &#963;)</h2><h2 id="25">Tips: E[&#8721;Xi / n] == &#956;, Var(&#8721;Xi / n) == &#963;^2 / n</h2><h2 id="26">And it is very clear that the expectation of uniformly distributed random</h2><h2 id="27">variable on [-0.5, 0.5] is 0; the varience of it is (1 / 12), and the n</h2><h2 id="28">here is 300. Note that (sqrt(n) * &#963;) == 5</h2><pre class="codeinput">Average = sum(R, 1) / (sqrt(n) * sqrt(1 / 12.0));
+</pre><h2 id="29">Calculate the interval while ploting the histogram</h2><pre class="codeinput">interval = (max(Average) - min(Average)) / nbins;
+</pre><h2 id="30">You can use the command "doc hist" in matlib command line window to get</h2><h2 id="31">more information about hist()</h2><pre class="codeinput">[Yi, X] = hist(Average, nbins);
+</pre><h2 id="32">This is a very important step!!!</h2><h2 id="33">In gereral, we are transforming Y from frequency form to probability</h2><h2 id="34">density form here, namely, P{&#8721;Xi / n &#8712; a paticular section}</h2><h2 id="37">Why? Why don't we just calculate P{&#8721;Xi / n = i}?</h2><h2 id="38">This simple stupid question brothered me for a few hours... :(</h2><h2 id="39">Here is the reason ---</h2><h2 id="41">1. &#8721;Xi / n is a "continuous random varible", technically speaking.</h2><h2 id="42">P{&#8721;Xi / n = any paticular real number} == 0. (Properties of integration)</h2><h2 id="43">2. For the reason "..." mentioned above, the only thing we can do if we</h2><h2 id="44">want to measure the mass function of &#8721;Xi / n, is to define the dx so</h2><h2 id="45">that f(x)dx makes sense.</h2><h2 id="48">And the key to obtain the equation below(or, to calculate</h2><h2 id="49">P{&#8721;Xi / n &#8712; a paticular section(or interval)}) is that we can calculate</h2><h2 id="50">the area of each bar and compare each of them to the total area ---</h2><h2 id="52">the area of a paticular bar: Y(i) * interval;</h2><h2 id="53">the area of all of the bars: &#8721;Y(i) * interval == sample_size * (max(Average) - min(Average))</h2><h2 id="55">Thus, P{&#8721;Xi / n &#8712; a paticular section} ==</h2><h2 id="56">Y(i) * interval / (sample_size *  interval == Y(i) / sample_size</h2><h2 id="59">It that enough? But wait... The equation is Y / (sample_size * interval)</h2><h2 id="60">Why do we need the divisor "interval"?</h2><h2 id="61">This simple question again brother me for almost half of the day :(</h2><h2 id="62">Just consider the meaning of the probability density function:</h2><h2 id="63">By integral, &#8747;f(x)dx == 1, for all probability density function.</h2><h2 id="64">Which means that the area that the curve covers between itself and the</h2><h2 id="65">x-axis(I am just talking about the one dimension situation) is always</h2><h2 id="66">equal to 1. Note that if we just make Y(i) equal to Y(i) / sample_size,</h2><h2 id="67">we are just insuring the sum of the height of each bar equal to 1, not</h2><h2 id="68">the sum of the area of each bar equals to 1, (You can try to plot the histogram</h2><h2 id="69">without the divisor "interval")which does not accord with the definition</h2><h2 id="70">of probability density function. So here, note that the total area of all</h2><h2 id="71">the bars equal to interval * &#8721;Y(i), while Y(i) is fixed. We have to make</h2><h2 id="72">sure that (interval * ?) == 1. By doing ? = Y(i) / sample_size * (1 / interval)</h2><h2 id="73">should be enough. &#8721;? == 1 / interval, thus, interval * ? == 1.</h2><pre class="codeinput">Y = Yi / (sample_size * interval);
+</pre><h2 id="74">Plotting the histogram and compare it with the Gaussian distribution</h2><pre class="codeinput">t = -3.5:0.05:3.5;
+Z = 1 / sqrt(2 * pi) * exp(-(t.^2) / 2);
+hold <span class="string">on</span>;
+bar(X, Y, 0.5);
+plot(t, Z, <span class="string">'r'</span>);
+</pre><img vspace="5" hspace="5" src="CLT_01.png" alt=""> <h2 id="75">Something more to say</h2><h2 id="76">The histogram may not perfectly fix the Gaussian distribution,</h2><h2 id="77">but the key is to compare the area they cover in each small interval.</h2><h2 id="78">Area is the key, not the height of these curve or bar.</h2><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2017a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Simulating CLT
+
+%% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+%% This script is aimed at simulatiing the central-limit theorem
+%% I will try my best to explain the process step by step
+%% If you have any great idea or question, please contact me 
+%% as soon as possible!
+%% E-mail: 16zfdeng5@stu.edu.cn
+%% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+
+
+
+%% Remove all the variables created before
+
+clear all;
+
+
+%% n -> ∑Xi, the number of i; 
+%% sample_size -> Note that in CLT, we treat ∑Xi/n as a unit(a single variable), which is 
+%%                the average of those i.i.d Xi. Here sample_size is the experiment times 
+%%                we want to simulate about ∑Xi/n. Just like the n of Bernoulli's random 
+%%                variable~(n, p).
+%% nbins -> For histogramming. We will see later.
+
+n = 5000; sample_size = 20000; nbins = 500;
+
+
+%% Here, we use a clever way to simulate our variable ∑Xi/n for 10,000
+%% times: we use the matlib function unifrnd() to get 300 * 10,000 independent 
+%% identically distributed variables(exactly, each of them is a specified
+%% real number). We can treat each sum of each column(containing 300 numbers) as a
+%% single experiment on the random variable, namely ∑Xi(not ∑Xi/n). 
+%% Note: Here. each Xi is a uniformly distributed random variable on [-0.5, 0.5]
+
+R=unifrnd(-0.5,0.5,[n, sample_size]);
+
+
+%% Here we sum each column using sum(R, 1). We can get a 1 * 10,000 vector, 
+%% each of which is the sum result of each column, namely ∑Xi.
+%% After summing, we standardize the random variable as following:
+%% (∑Xi / n - μ) / (sqrt(n) * σ)
+%% Tips: E[∑Xi / n] == μ, Var(∑Xi / n) == σ^2 / n
+%% And it is very clear that the expectation of uniformly distributed random 
+%% variable on [-0.5, 0.5] is 0; the varience of it is (1 / 12), and the n
+%% here is 300. Note that (sqrt(n) * σ) == 5
+
+Average = sum(R, 1) / (sqrt(n) * sqrt(1 / 12.0));
+
+%% Calculate the interval while ploting the histogram
+
+interval = (max(Average) - min(Average)) / nbins;
+
+
+%% You can use the command "doc hist" in matlib command line window to get 
+%% more information about hist()
+
+[Yi, X] = hist(Average, nbins);
+
+
+%% This is a very important step!!!
+%% In gereral, we are transforming Y from frequency form to probability
+%% density form here, namely, P{∑Xi / n ∈ a paticular section}
+%%
+%%
+%% Why? Why don't we just calculate P{∑Xi / n = i}? 
+%% This simple stupid question brothered me for a few hours... :(
+%% Here is the reason REPLACE_WITH_DASH_DASH-
+%%
+%% 1. ∑Xi / n is a "continuous random varible", technically speaking. 
+%%    P{∑Xi / n = any paticular real number} == 0. (Properties of integration) 
+%% 2. For the reason "..." mentioned above, the only thing we can do if we 
+%%    want to measure the mass function of ∑Xi / n, is to define the dx so
+%%    that f(x)dx makes sense.
+%%
+%%
+%% And the key to obtain the equation below(or, to calculate 
+%% P{∑Xi / n ∈ a paticular section(or interval)}) is that we can calculate
+%% the area of each bar and compare each of them to the total area REPLACE_WITH_DASH_DASH-
+%%
+%% the area of a paticular bar: Y(i) * interval; 
+%% the area of all of the bars: ∑Y(i) * interval == sample_size * (max(Average) - min(Average))
+%%
+%% Thus, P{∑Xi / n ∈ a paticular section} == 
+%% Y(i) * interval / (sample_size *  interval == Y(i) / sample_size
+%%
+%%
+%% It that enough? But wait... The equation is Y / (sample_size * interval)
+%% Why do we need the divisor "interval"?
+%% This simple question again brother me for almost half of the day :(
+%% Just consider the meaning of the probability density function:
+%% By integral, ∫f(x)dx == 1, for all probability density function.
+%% Which means that the area that the curve covers between itself and the
+%% x-axis(I am just talking about the one dimension situation) is always 
+%% equal to 1. Note that if we just make Y(i) equal to Y(i) / sample_size,
+%% we are just insuring the sum of the height of each bar equal to 1, not
+%% the sum of the area of each bar equals to 1, (You can try to plot the histogram
+%% without the divisor "interval")which does not accord with the definition
+%% of probability density function. So here, note that the total area of all
+%% the bars equal to interval * ∑Y(i), while Y(i) is fixed. We have to make
+%% sure that (interval * ?) == 1. By doing ? = Y(i) / sample_size * (1 / interval)
+%% should be enough. ∑? == 1 / interval, thus, interval * ? == 1.
+
+Y = Yi / (sample_size * interval);
+
+
+%% Plotting the histogram and compare it with the Gaussian distribution
+
+t = -3.5:0.05:3.5;
+Z = 1 / sqrt(2 * pi) * exp(-(t.^2) / 2);
+hold on;
+bar(X, Y, 0.5);
+plot(t, Z, 'r');
+
+
+%% Something more to say
+%% The histogram may not perfectly fix the Gaussian distribution,
+%% but the key is to compare the area they cover in each small interval.
+%% Area is the key, not the height of these curve or bar.
+##### SOURCE END #####
+--></body></html>
