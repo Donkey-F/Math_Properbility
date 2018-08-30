@@ -1,6 +1,6 @@
 # Central-limit theorem simulating using Matlib
 
-You can check the CLT.html firstly in the direction /CLT, it is much more clear.  
+You can check the CLT.html firstly in the path: ./CLT/html/CLT.html, download the file and open it with your browser.    
 The source code is CLT.m, you can open it with Matlab.    
   
 If there is any question or great idea, please contact me :)  
