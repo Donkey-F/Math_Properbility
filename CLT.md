@@ -1,7 +1,9 @@
-# Central-limit theorem simulating using Matlib
+# Welcome!  
 
-You can check the CLT.html firstly in the direction /CLT, it is much more clear.  
-The source code is CLT.m, you can open it with Matlib.  
+This is about the probability course.  
+I tend to use Matlib or Python to simulate some theorem when I want to have some deeper understanding or them.  
+If they are helpful to you, I will be very happy :)  
   
-If there is any question or great idea, please contact me :)  
-E-mail: 16zfdeng5@stu.edu.cn
+If you have any question or great idea, please please contact me as soon as possible!!!  
+My personal e-mail address: 16zfdeng5@stu.edu.cn  
+Enjoy here :)
