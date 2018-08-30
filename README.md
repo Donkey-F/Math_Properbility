@@ -3,7 +3,7 @@
 Firstly, I make a stupid mistake while naming my repository...Just ignore it :)  
   
 This is about the probability course.  
-I tend to use Matlib or Python to simulate some theorem when I want to have some deeper understanding or them.  
+I tend to use Matlib or Python to simulate some theorems when I want to have some deeper understanding on these theorems.  
 If they are helpful to you, I will be very happy :)  
   
 If you have any question or great idea, please please contact me as soon as possilbe!  
